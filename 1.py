@@ -1,4 +1,4 @@
-  
+
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from selenium import webdriver
@@ -7,7 +7,6 @@ import requests
 import pymysql 
 import json
 import re
-
 
 db = pymysql.connect(
     host = " ",
@@ -23,15 +22,20 @@ lists = []
 headers = requests.utils.default_headers()
 headers.update({'User-Agent':'Mozilla/5.0'})
 
+# 지금 한 번 사이트 검색하는거니까 for문을 한 번 만 도는 것!
+# SQL사용할 수 있으면 한 번 확인해볼것!
+
+# var1 이 0 인이유?
+
 var1 = 0 
 var2 = 1
 
 for i in range(var1,var2):
    # Fetching Url  
-    base_url = "https://stackoverflow.com/"
-    url = "https://stackoverflow.com/questions/59078411/setting-react-props-state-from-jquery-tree-event"
+    base_url = "https://www.heykorean.com/web/us/"                  # 메인화면
+    url = "https://rent.heykorean.com/web/us/property/list?cp="     # 특정화면  (어떤 특정화면???)
 
-    driver = webdriver.Firefox()
+    driver = webdriver.Chrome()
     driver.get(url+str(i))
 
     content = driver.page_source
@@ -44,7 +48,7 @@ for i in range(var1,var2):
             x = rent.get("href")
             link = urljoin(base_url,x)
             lists.append({"url": link})
-            print(lists)
+            # print(lists)
      
     cursor = db.cursor()
 

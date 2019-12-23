@@ -1,3 +1,4 @@
+'''
 # sql 연결/해제
 
 import pymysql
@@ -17,3 +18,9 @@ try:
 finally:
     cur.close()
     conn.close()
+'''
+
+from selenium import webdriver
+ 
+path = "prac.com"
+driver = webdriver.Chrome(path)
