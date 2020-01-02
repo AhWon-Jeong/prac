@@ -1,5 +1,5 @@
 
-from bs4 import BeautifulSoup
+from bs4 import c
 from urllib.parse import urljoin
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -8,6 +8,7 @@ import pymysql
 import json
 import re
 
+"""
 db = pymysql.connect(
     host = " ",
     user = " ",
@@ -15,7 +16,7 @@ db = pymysql.connect(
     database = " ",
     charset='utf8mb4',
 )
-
+"""
 question = []
 lists = []
 
@@ -27,23 +28,50 @@ headers.update({'User-Agent':'Mozilla/5.0'})
 
 # var1 이 0 인이유?
 
-var1 = 0 
-var2 = 1
 
-for i in range(var1,var2):
-   # Fetching Url  
-    base_url = "https://www.heykorean.com/web/us/"                  # 메인화면
-    url = "https://rent.heykorean.com/web/us/property/list?cp="     # 특정화면  (어떤 특정화면???)
+base_url = "https://www.heykorean.com/web/us/"                  # 메인화면
+url = "https://rent.heykorean.com/web/us/property/list?cp="     # 특정화면  (어떤 특정화면???)
 
-    driver = webdriver.Chrome()
-    driver.get(url+str(i))
+driver = webdriver.Chrome('C:/Users/user/AppData/Local/Programs/Python/chromedriver.exe')
+# driver.get("https://rent.heykorean.com/web/us/property/list?cp=1") 
 
-    content = driver.page_source
-    soup = BeautifulSoup(content,"lxml")
+content = driver.page_source
+soup = BeautifulSoup(content,"lxml")
 
-    #fetching URLs 
-    rents = soup.find_all('a', attrs={'class':'question-hyperlink'})
+res = requests.get("https://rent.heykorean.com/web/us/property/list?cp=1")
+soup = BeautifulSoup(res.content, 'html.parser')
 
+title = soup.select_one('div#container   div#rent-list-container   div#title-text')
+
+print(title.get_text())
+
+"""
+#fetching URLs 
+rents = soup.find_all('a', attrs={'class':'title-text'})
+print(str(rents))
+"""
+
+"""
+import requests
+from bs4 import BeautifulSoup
+
+# 1) reqeusts 라이브러리를 활용한 HTML 페이지 요청 
+# 1-1) res 객체에 HTML 데이터가 저장되고, res.content로 데이터를 추출할 수 있음
+res = requests.get('http://v.media.daum.net/v/20170615203441266')
+
+# print(res.content)
+# 2) HTML 페이지 파싱 BeautifulSoup(HTML데이터, 파싱방법)
+# 2-1) BeautifulSoup 파싱방법
+soup = BeautifulSoup(res.content, 'html.parser')
+
+# 3) 필요한 데이터 검색
+title = soup.find('title')
+
+# 4) 필요한 데이터 추출
+print(title.get_text())
+"""
+
+"""
     for rent in rents:
             x = rent.get("href")
             link = urljoin(base_url,x)
@@ -67,7 +95,7 @@ for i in range(var1,var2):
         
         driver.quit()
 
-
+"""
 #         ###  INSERT RECORD  ### 
 #             insert = "INSERT INTO mty.rent_sample(title, rent_type, rent_location, rent_price) VALUES ('{0}', '{1}', '{2}', '{3}')".format(title_list,rent_room,rent_loc,rent_price)
 #             cursor.execute(insert)
